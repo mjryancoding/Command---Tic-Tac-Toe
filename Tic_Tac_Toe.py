@@ -1,5 +1,4 @@
 layout = ['T','I','C','T','A','C','T','O','E']
-game_won = False
 
 def board_layout(layout):
 
@@ -36,97 +35,82 @@ def player_2_win_check():
             print('\nPlayer 2 Wins!\n')
             return True
 
+def restart():
+    layout = [' ',' ',' ',' ',' ',' ',' ',' ',' ']
+    board_layout(layout)
+    player_1_move()
+
 def player_1_move_played(): 
     if player_1_win_check() == True:
-        exit
+        ask_restart = input("Play again Y or N?")
+        if ask_restart.lower() == 'Y':
+            restart()
+        else:
+            exit
     else:
         board_layout(layout)
         player_2_move()
-
-    
+   
 def player_2_move_played():
     if player_2_win_check() == True:
-        exit
+        ask_restart = input("Play again Y or N?")
+        if ask_restart.lower() == 'Y':
+            restart()
+        else:
+            exit
     else:
         board_layout(layout)
         player_1_move()
 
 def player_1_spot_taken():
-    print("Someone has already played there!")
+    print("\033[31m""\nSomeone has already played there!\n""\033[37m")
     player_1_move()
 
 def player_2_spot_taken():
-    print("Someone has already played there!")
+    print("\033[31m""\nSomeone has already played there!\n""\033[37m")
     player_2_move()
 
+def player_1_wrong_input():
+    print("\033[31m""\nThat is not a correct move!\n""\033[37m")
+    player_1_move()
+
+def player_2_wrong_input():
+    print("\033[31m""\nThat is not a correct move!\n""\033[37m")
+    player_2_move()
 
 def player_1_move():
     move = input("Player 1, pick your square:")
-    if move.lower() == 'a1' and layout[0] == ' ':
-        layout[0] = 'X'
-        player_1_move_played()
-    elif move.lower() == 'a2' and layout[1] == ' ':
-        layout[1] = 'X'
-        player_1_move_played()
-    elif move.lower() == 'a3' and layout[2] == ' ':
-        layout[2] = 'X'
-        player_1_move_played()
-    elif move.lower() == 'b1' and layout[3] == ' ':
-        layout[3] = 'X'
-        player_1_move_played()
-    elif move.lower() == 'b2' and layout[4] == ' ':
-        layout[4] = 'X'
-        player_1_move_played()
-    elif move.lower() == 'b3' and layout[5] == ' ':
-        layout[5] = 'X'
-        player_1_move_played()
-    elif move.lower() == 'c1' and layout[6] == ' ':
-        layout[6] = 'X'
-        player_1_move_played()
-    elif move.lower() == 'c2' and layout[7] == ' ':
-        layout[7] = 'X'
-        player_1_move_played()
-    elif move.lower() == 'c3' and layout[8] == ' ':
-        layout[8] = 'X'
-        player_1_move_played()
-    elif move.lower() == 'exit':
-        exit
-    else:
-        player_1_spot_taken()
+    all_moves = [['a1', 0], ['a2', 1], ['a3', 2], ['b1', 3], ['b2', 4], ['b3', 5], ['c1', 6], ['c2', 7], ['c3', 8]]
+    correct_move = False
+    for moves in all_moves:
+        if move.lower() == moves[0] and layout[moves[1]] == ' ':
+            correct_move = True
+            layout[moves[1]] = 'X'
+            player_1_move_played()
+        elif move.lower() == 'exit':
+            correct_move = True
+            exit
+        elif move.lower() == moves[0] and (layout[moves[1]] == 'X' or layout[moves[1]] == 'O'):
+            player_1_spot_taken()
+    if correct_move == False:
+        player_1_wrong_input()          
         
 def player_2_move():
     move = input("Player 2, pick your square:")
-    if move.lower() == 'a1' and layout[0] == ' ':
-        layout[0] = 'O'
-        player_2_move_played()
-    elif move.lower() == 'a2' and layout[1] == ' ':
-        layout[1] = 'O'
-        player_2_move_played()
-    elif move.lower() == 'a3' and layout[2] == ' ':
-        layout[2] = 'O'
-        player_2_move_played()
-    elif move.lower() == 'b1' and layout[3] == ' ':
-        layout[3] = 'O'
-        player_2_move_played()
-    elif move.lower() == 'b2' and layout[4] == ' ':
-        layout[4] = 'O'
-        player_2_move_played()
-    elif move.lower() == 'b3' and layout[5] == ' ':
-        layout[5] = 'O'
-        player_2_move_played()
-    elif move.lower() == 'c1' and layout[6] == ' ':
-        layout[6] = 'O'
-        player_2_move_played()
-    elif move.lower() == 'c2' and layout[7] == ' ':
-        layout[7] = 'O'
-        player_2_move_played()
-    elif move.lower() == 'c3' and layout[8] == ' ':
-        layout[8] = 'O'
-        player_2_move_played()
-    elif move.lower() == 'exit':
-        exit
-    else:
-        player_2_spot_taken()
+    all_moves = [['a1', 0], ['a2', 1], ['a3', 2], ['b1', 3], ['b2', 4], ['b3', 5], ['c1', 6], ['c2', 7], ['c3', 8]]
+    correct_move = False
+    for moves in all_moves:
+        if move.lower() == moves[0] and layout[moves[1]] == ' ':
+            correct_move = True
+            layout[moves[1]] = 'O'
+            player_2_move_played()
+        elif move.lower() == 'exit':
+            correct_move = True
+            exit
+        elif move.lower() == moves[0] and (layout[moves[1]] == 'X' or layout[moves[1]] == 'O'):
+            player_2_spot_taken()
+    if correct_move == False:
+        player_2_wrong_input()
 
 rules = """\nPlayer 1 is X\nPlayer 2 is O\n
 Each square has a letter to the left, and a number above
@@ -136,10 +120,8 @@ start = "\nType \'Start\' to start\n"
 
 board_layout(layout)
 print(rules)
-
     
 start_input = input(start)
-
 if start_input.lower() == 'start':
     layout = [' ',' ',' ',' ',' ',' ',' ',' ',' ']
     board_layout(layout)
