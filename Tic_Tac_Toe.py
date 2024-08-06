@@ -1,8 +1,9 @@
 layout = ['T','I','C','T','A','C','T','O','E']
+game_won = False
 
 def board_layout(layout):
 
-    num_line = "\n      1     2     3  "
+    num_line = "\n""\033[37m""      1     2     3  "
     a_line = "\n\na     " + layout[0] + "  |  " + layout[1] + "  |  " + layout[2] + "  "
     ab_break = "\n    -----|-----|-----"
     b_line = "\nb     " + layout[3] + "  |  " + layout[4] + "  |  " + layout[5] + "  "
@@ -12,13 +13,43 @@ def board_layout(layout):
     board = num_line + a_line + ab_break + b_line + bc_break + c_line
     return print(board)
 
-def player_1_move_played():
-    board_layout(layout)
-    player_2_move()
 
+def player_1_win_check():
+    wins = [[0, 1, 2], [3, 4, 5], [6, 7, 8], [0, 3, 6], [1, 4, 7], [2, 5, 8], [0, 4, 8], [2, 4, 6]]
+    for win in wins:
+        if layout[win[0]] == 'X' and layout[win[1]] == 'X' and layout[win[2]] == 'X':
+            layout[win[0]] = "\033[32m""X""\033[37m"
+            layout[win[1]] = "\033[32m""X""\033[37m"
+            layout[win[2]] = "\033[32m""X""\033[37m"
+            board_layout(layout)
+            print('\nPlayer 1 Wins!\n')
+            return True
+
+def player_2_win_check():
+    wins = [[0, 1, 2], [3, 4, 5], [6, 7, 8], [0, 3, 6], [1, 4, 7], [2, 5, 8], [0, 4, 8], [2, 4, 6]]
+    for win in wins:
+        if layout[win[0]] == 'O' and layout[win[1]] == 'O' and layout[win[2]] == 'O':
+            layout[win[0]] = "\033[33m""O""\033[37m"
+            layout[win[1]] = "\033[33m""O""\033[37m"
+            layout[win[2]] = "\033[33m""O""\033[37m"
+            board_layout(layout)
+            print('\nPlayer 2 Wins!\n')
+            return True
+
+def player_1_move_played(): 
+    if player_1_win_check() == True:
+        exit
+    else:
+        board_layout(layout)
+        player_2_move()
+
+    
 def player_2_move_played():
-    board_layout(layout)
-    player_1_move()
+    if player_2_win_check() == True:
+        exit
+    else:
+        board_layout(layout)
+        player_1_move()
 
 def player_1_spot_taken():
     print("Someone has already played there!")
@@ -96,8 +127,6 @@ def player_2_move():
         exit
     else:
         player_2_spot_taken()
-   
-
 
 rules = """\nPlayer 1 is X\nPlayer 2 is O\n
 Each square has a letter to the left, and a number above
